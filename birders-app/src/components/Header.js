@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "../store/UserContext";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Button from "./Button";
@@ -56,6 +57,10 @@ export default function Header() {
   const login = () => {
     console.log("로그인");
   };
+
+  const value = useContext(UserContext);
+  //console.log(value.name);
+  console.log("h", value.name);
   return (
     <SHeader>
       <Wrapper>
@@ -65,6 +70,9 @@ export default function Header() {
         <Column>
           <StyledNavLink to="/post">Post</StyledNavLink>
           <StyledNavLink to="/board">Board</StyledNavLink>
+        </Column>
+        <Column>
+          <div>안녕하세요, {value.name} 님</div>
         </Column>
         <Column>
           <Button isPrimary={true} _onClick={login} margin="0">
