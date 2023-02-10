@@ -7,7 +7,8 @@ export default function UserStore(props) {
   const user = {
     name: "sandpiper",
     email: "ddd",
-    changeNickname: (updated) => setNickname(updated),
+    //changeNickname: (updated) => setNickname(updated),
+    test: () => {},
   };
 
   return (

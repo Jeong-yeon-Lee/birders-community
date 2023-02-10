@@ -7,12 +7,13 @@ import BoardPage from "./pages/BoardPage";
 import PostPage from "./pages/PostPage";
 import EditorPage from "./pages/EditorPage";
 import Layout from "./components/Layout";
-import UserStore from "./store/UserContext";
+//import UserStore from "./store/UserContext";
+import { AuthContextProvider } from "./components/AuthProvider";
 
 function App() {
   return (
     <>
-      <UserStore>
+      <AuthContextProvider>
         <Layout>
           <Routes>
             <Route path={"/"} element={<MainPage />}></Route>
@@ -23,7 +24,7 @@ function App() {
             <Route path={"/editor"} element={<EditorPage />}></Route>
           </Routes>
         </Layout>
-      </UserStore>
+      </AuthContextProvider>
     </>
   );
 }

@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
-import { UserContext } from "../store/UserContext";
+//import { UserContext } from "../store/UserContext";
+import { AuthStateContext } from "../components/AuthProvider";
+
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Button from "./Button";
@@ -58,9 +60,11 @@ export default function Header() {
     console.log("로그인");
   };
 
-  const value = useContext(UserContext);
+  //const value = useContext(UserContext);
   //console.log(value.name);
-  console.log("h", value.name);
+  //console.log("h", value.name);
+  const value = useContext(AuthStateContext);
+  const currentAuthUser = value.currentAuthUser;
   return (
     <SHeader>
       <Wrapper>
@@ -72,7 +76,12 @@ export default function Header() {
           <StyledNavLink to="/board">Board</StyledNavLink>
         </Column>
         <Column>
-          <div>안녕하세요, {value.name} 님</div>
+          안녕하세요 {currentAuthUser && currentAuthUser.displayName}님
+          {/* <UserContext.Consumer>
+            {(user) => {
+              <div>안녕하세요, {user.name} 님</div>;
+            }}
+          </UserContext.Consumer> */}
         </Column>
         <Column>
           <Button isPrimary={true} _onClick={login} margin="0">

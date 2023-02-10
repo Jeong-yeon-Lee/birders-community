@@ -17,6 +17,7 @@ export default function RegisterPage() {
     const { nickname, password } = userInputs;
     alert(`${nickname} and ${password}`);
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>

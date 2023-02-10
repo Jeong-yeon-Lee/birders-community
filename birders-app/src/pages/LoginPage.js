@@ -1,13 +1,16 @@
 import React, { useContext, useState } from "react";
-import { UserContext } from "../store/UserContext";
+//import { UserContext } from "../store/UserContext";
+import { AuthStateContext } from "../components/AuthProvider";
 import { auth } from "../firebaseConfig";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 export default function LoginPage() {
-  const value = useContext(UserContext);
-  console.log(1, value.name);
+  //const value = useContext(UserContext);
+  const value = useContext(AuthStateContext);
+  const currentAuthUser = value.currentAuthUser;
+  console.log("value", value.currentAuthUser);
   // Google
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(currentAuthUser);
 
   //Email
   const [userInputs, setUserInputs] = useState({
