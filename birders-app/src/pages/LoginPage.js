@@ -1,69 +1,23 @@
 import React, { useContext, useState } from "react";
-//import { UserContext } from "../store/UserContext";
-import { AuthStateContext } from "../components/AuthProvider";
-import { auth } from "../firebaseConfig";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import AuthContext from "../components/AuthProvider";
+import GoogleButton from "react-google-button";
 
-export default function LoginPage() {
-  //const value = useContext(UserContext);
-  const value = useContext(AuthStateContext);
-  const currentAuthUser = value.currentAuthUser;
-  console.log("value", value.currentAuthUser);
-  // Google
-  const [userData, setUserData] = useState(currentAuthUser);
+const LoginPage = () => {
+  const context = useContext(AuthContext);
+  const { user, isLoggedIn, logIn, logOut } = context;
 
-  //Email
-  const [userInputs, setUserInputs] = useState({
-    nickname: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    setUserInputs({ ...userInputs, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const { nickname, password } = userInputs;
-    value.name = nickname;
-    console.log(2, value.name);
-    alert(`${nickname} and ${password}`);
-  };
-
-  function handleGoogleLogin() {
-    const provider = new GoogleAuthProvider(); // provider를 구글로 설정
-    signInWithPopup(auth, provider) // popup을 이용한 signup
-      .then((data) => {
-        setUserData(data.user); // user data 설정
-        console.log(data); // console로 들어온 데이터 표시
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <label>닉네임: </label>
-        <input
-          type="text"
-          name="nickname"
-          onChange={handleChange}
-          value={userInputs.nickname}
-        />
-        <br />
-        <label>패스워드: </label>
-        <input
-          type="text"
-          name="password"
-          onChange={handleChange}
-          value={userInputs.password}
-        />
-        <input type="submit" value="이메일로 로그인" />
-      </form>
-
-      <button onClick={handleGoogleLogin}>Google Login</button>
-      {userData ? userData.displayName : null}
+      <h1>구글 소셜 로그인 구현</h1>
+      <h2>유저 상태 : {isLoggedIn ? "로그인" : "로그아웃"}</h2>
+      <p>유저 이름 : {user?.displayName}</p>
+      {isLoggedIn ? (
+        <button onClick={logOut}>로그아웃</button>
+      ) : (
+        <GoogleButton onClick={logIn} />
+      )}
     </div>
   );
-}
+};
+
+export default LoginPage;

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-//import { UserContext } from "../store/UserContext";
-import { AuthStateContext } from "../components/AuthProvider";
+import AuthContext from "../components/AuthProvider";
 
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -60,11 +59,8 @@ export default function Header() {
     console.log("로그인");
   };
 
-  //const value = useContext(UserContext);
-  //console.log(value.name);
-  //console.log("h", value.name);
-  const value = useContext(AuthStateContext);
-  const currentAuthUser = value.currentAuthUser;
+  const context = useContext(AuthContext);
+  const { user, isLoggedIn, logIn, logOut } = context;
   return (
     <SHeader>
       <Wrapper>
@@ -75,14 +71,7 @@ export default function Header() {
           <StyledNavLink to="/post">Post</StyledNavLink>
           <StyledNavLink to="/board">Board</StyledNavLink>
         </Column>
-        <Column>
-          안녕하세요 {currentAuthUser && currentAuthUser.displayName}님
-          {/* <UserContext.Consumer>
-            {(user) => {
-              <div>안녕하세요, {user.name} 님</div>;
-            }}
-          </UserContext.Consumer> */}
-        </Column>
+        <Column>안녕하세요 , {user?.displayName} 님</Column>
         <Column>
           <Button isPrimary={true} _onClick={login} margin="0">
             <ButtonLink to="/login">LOGIN</ButtonLink>

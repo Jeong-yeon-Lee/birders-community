@@ -1,49 +1,51 @@
-import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth } from "../firebaseConfig";
-//current 유저 가져오기
 
-const currentAuthUser = auth.currentUser;
-console.log(currentAuthUser);
-// if (currentAuthUser !== null) {
+const AuthContext = createContext({
+  user: {},
+  isLoggedIn: false,
+  logIn: () => {},
+  logOut: () => {},
+});
 
-//     const displayName = currentAuthUser.displayName;
-//     const email = currentAuthUser.email;
-
-//     const uid = currentAuthUser.uid;
-//   }
-
-//로그인 정보 전역 관리
-export const AuthStateContext = createContext();
 export const AuthContextProvider = ({ children }) => {
-  const [authState, setAuthState] = useState({
-    state: "loading",
-    isAuthentication: false,
-    user: null,
-  });
+  const [user, setUser] = useState({});
 
-  const onChange = (user) => {
-    if (user) {
-      setAuthState({
-        state: "loaded",
-        isAuthentication: true,
-        currentAuthUser,
-      });
-    } else {
-      setAuthState({ state: "loaded", isAuthentication: false, user });
-    }
+  const logIn = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider);
   };
-  const setError = (error) =>
-    setAuthState({ state: "error", isAuthentication: false, user: null });
+
+  const logOut = () => {
+    signOut(auth);
+  };
+
+  const authContext = {
+    user,
+    isLoggedIn: !!user?.accessToken,
+    logIn,
+    logOut,
+  };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, onChange, setError);
-    return () => unsubscribe();
+    const stateChange = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => {
+      stateChange();
+    };
   }, []);
 
   return (
-    <AuthStateContext.Provider value={authState}>
-      {children}
-    </AuthStateContext.Provider>
+    <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>
   );
 };
+
+export default AuthContext;
