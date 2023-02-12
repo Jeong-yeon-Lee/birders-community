@@ -12,7 +12,6 @@ const LayoutWrapper = styled.div`
 const Content = styled.main`
   display: block;
   margin: 0 auto;
-  margin-top: 45px;
   max-width: 930px;
   width: 100%;
   height: 100%;

@@ -55,12 +55,10 @@ const ButtonLink = styled(Link)`
 `;
 
 export default function Header() {
-  const login = () => {
-    console.log("로그인");
-  };
-
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut } = context;
+  //   console.log(isLoggedIn);
+  //   console.log(user?.displayName);
   return (
     <SHeader>
       <Wrapper>
@@ -71,11 +69,20 @@ export default function Header() {
           <StyledNavLink to="/post">Post</StyledNavLink>
           <StyledNavLink to="/board">Board</StyledNavLink>
         </Column>
-        <Column>안녕하세요 , {user?.displayName} 님</Column>
         <Column>
-          <Button isPrimary={true} _onClick={login} margin="0">
-            <ButtonLink to="/login">LOGIN</ButtonLink>
-          </Button>
+          {isLoggedIn && <div>안녕하세요 , {user?.displayName} 님</div>}
+        </Column>
+        <Column>
+          {isLoggedIn && (
+            <Button isPrimary={true} _onClick={logOut} margin="0">
+              <ButtonLink to="/">LOGOUT</ButtonLink>
+            </Button>
+          )}
+          {!isLoggedIn && (
+            <Button isPrimary={true} margin="0">
+              <ButtonLink to="/login">LOGIN</ButtonLink>
+            </Button>
+          )}
         </Column>
       </Wrapper>
     </SHeader>

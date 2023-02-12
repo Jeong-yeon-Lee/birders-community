@@ -16,7 +16,7 @@ const AuthContext = createContext({
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
-
+  //const [isLoggedIn, setIsLoggedIn] = useState({});
   const logIn = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider);
@@ -36,6 +36,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const stateChange = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      //setIsLoggedIn(!!user?.accessToken);
     });
 
     return () => {
