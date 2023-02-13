@@ -19,13 +19,16 @@ const Card = (props) => {
           }}
         />
         <Box2>
-          <Grid padding="12px" left>
+          <Grid padding="0.25rem" left>
             <Text bold size="16px">
-              <Link to={`/post/${id}`} key={id}>
+              <StyledPostTitleLink to={`/post/${id}`} key={id}>
                 {post.title}
-              </Link>
+              </StyledPostTitleLink>
             </Text>
-            <Text size="14px"> {post.title}</Text>
+            <Text size="14px"> {post.textContents}</Text>
+            <Text size="14px" color="#006e5f">
+              #{post.categoryName}
+            </Text>
             <Text size="8px" color="grey">
               {postCreateAt}
             </Text>
@@ -50,8 +53,15 @@ const Card = (props) => {
     </>
   );
 };
+
+const StyledPostTitleLink = styled(Link)`
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+`;
 const CardContainer = styled.div`
-  width: 320px;
+  width: 250px;
   max-width: 335px;
   min-height: 0;
   overflow: hidden;
@@ -83,7 +93,7 @@ const Box2 = styled.div`
   width: 100%;
   height: 180px;
   overflow: hidden;
-  padding: 10px;
+  padding: 0 0.5rem;
   margin: auto;
   background-color: ${(props) => props.theme.main_white};
   background-size: cover;

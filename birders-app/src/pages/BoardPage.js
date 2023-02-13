@@ -4,11 +4,16 @@ import { collection, getDocs } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import styled from "styled-components";
+import CategoryTab from "../components/CategoryTab";
 
 export default function BoardPage() {
   const [posts, setPosts] = useState([]);
   const postsCollectionRef = collection(db, "posts");
   //const q = collection(db, "posts");
+  const [currentCategory, setCurrentCategory] = useState({
+    tabNum: 0,
+    displayName: "all",
+  });
 
   useEffect(() => {
     let res = [];
@@ -31,9 +36,26 @@ export default function BoardPage() {
     getPosts();
   }, []);
 
+  const handleCategoryChange = (obj) => {
+    setCurrentCategory({
+      ...currentCategory,
+      tabNum: obj.tabNum,
+      displayName: obj.displayName,
+    });
+    //console.log(currentCategory, "board");
+  };
   //console.log(posts);
   const result = posts.map((post) => <Card post={post} key={post.id}></Card>);
-  return <ListContainer>{posts.length > 0 && result}</ListContainer>;
+  return (
+    <>
+      <CategoryTab
+        tabNum={currentCategory.tabNum}
+        displayName={currentCategory.displayName}
+        onCategoryChange={handleCategoryChange}
+      />
+      <ListContainer>{posts.length > 0 && result}</ListContainer>
+    </>
+  );
 }
 
 const ListContainer = styled.div`
