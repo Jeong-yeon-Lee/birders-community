@@ -6,36 +6,37 @@ import Card from "../components/Card";
 import styled from "styled-components";
 import CategoryTab from "../components/CategoryTab";
 import { Content } from "../elements/Common";
+import Board from "../components/Board";
 
 export default function BoardPage() {
-  const [posts, setPosts] = useState([]);
-  const postsCollectionRef = collection(db, "posts");
-  //const q = collection(db, "posts");
+  //const [posts, setPosts] = useState([]);
+  //const postsCollectionRef = collection(db, "posts");
+
   const [currentCategory, setCurrentCategory] = useState({
     tabNum: 0,
     displayName: "all",
   });
 
-  useEffect(() => {
-    let res = [];
-    const getPosts = async () => {
-      const dbPosts = await getDocs(postsCollectionRef);
-      //const data = await getDocs(postsCollectionRef);
-      //console.log("dbpost", dbPosts);
-      dbPosts.forEach((doc) => {
-        //console.log(doc);
-        const postObject = {
-          ...doc.data(),
-          id: doc.id,
-        };
-        res.push(postObject);
-        // setPosts((prev) => [postObject, ...prev]);
-        //setPosts([...posts, postObject])//왜 안되지?
-        setPosts([...res]);
-      });
-    };
-    getPosts();
-  }, []);
+  // useEffect(() => {
+  //   let res = [];
+  //   const getPosts = async () => {
+  //     const dbPosts = await getDocs(postsCollectionRef);
+  //     //const data = await getDocs(postsCollectionRef);
+  //     //console.log("dbpost", dbPosts);
+  //     dbPosts.forEach((doc) => {
+  //       //console.log(doc);
+  //       const postObject = {
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       };
+  //       res.push(postObject);
+  //       // setPosts((prev) => [postObject, ...prev]);
+  //       //setPosts([...posts, postObject])//왜 안되지?
+  //       setPosts([...res]);
+  //     });
+  //   };
+  //   getPosts();
+  // }, []);
 
   const handleCategoryChange = (obj) => {
     setCurrentCategory({
@@ -46,7 +47,7 @@ export default function BoardPage() {
     //console.log(currentCategory, "board");
   };
   //console.log(posts);
-  const result = posts.map((post) => <Card post={post} key={post.id}></Card>);
+  //const result = posts.map((post) => <Card post={post} key={post.id}></Card>);
   return (
     <>
       <Content>
@@ -55,7 +56,9 @@ export default function BoardPage() {
           displayName={currentCategory.displayName}
           onCategoryChange={handleCategoryChange}
         />
-        <ListContainer>{posts.length > 0 && result}</ListContainer>
+        <ListContainer>
+          <Board currentCategoryName={currentCategory.displayName} />
+        </ListContainer>
       </Content>
     </>
   );
