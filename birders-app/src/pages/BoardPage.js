@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import styled from "styled-components";
 import CategoryTab from "../components/CategoryTab";
+import { Content } from "../elements/Common";
 
 export default function BoardPage() {
   const [posts, setPosts] = useState([]);
@@ -48,12 +49,14 @@ export default function BoardPage() {
   const result = posts.map((post) => <Card post={post} key={post.id}></Card>);
   return (
     <>
-      <CategoryTab
-        tabNum={currentCategory.tabNum}
-        displayName={currentCategory.displayName}
-        onCategoryChange={handleCategoryChange}
-      />
-      <ListContainer>{posts.length > 0 && result}</ListContainer>
+      <Content>
+        <CategoryTab
+          tabNum={currentCategory.tabNum}
+          displayName={currentCategory.displayName}
+          onCategoryChange={handleCategoryChange}
+        />
+        <ListContainer>{posts.length > 0 && result}</ListContainer>
+      </Content>
     </>
   );
 }

@@ -26,3 +26,12 @@ const P = styled.p`
   ${(props) => (props.margin ? `margin: ${props.margin};` : "")}
   ${(props) => (props.inline ? `display: inline` : "")}
 `;
+
+export const Content = styled.main`
+  display: block;
+  margin: 0 auto;
+  max-width: 930px;
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+`;
