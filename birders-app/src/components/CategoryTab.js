@@ -59,7 +59,6 @@ const CategoryTab = (props) => {
 };
 const TabContainer = styled.div`
   display: flex;
-  width: 93%;
   margin: auto;
   flex-direction: column;
   height: 100%;

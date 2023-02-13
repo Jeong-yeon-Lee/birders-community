@@ -1,10 +1,13 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import AuthContext from "../components/AuthProvider";
 import Grid from "../elements/Grid";
 import { Text } from "../elements/Common";
 import SampleImg from "../images/bird_sample.jpg";
 import { Link } from "react-router-dom";
 const Card = (props) => {
+  const context = useContext(AuthContext);
+  const { user, isLoggedIn, logIn, logOut } = context;
   // console.log(props);
   const { id, post } = props.post;
   const postCreateAt = new Date(post.createdAt).toLocaleString();
@@ -21,7 +24,10 @@ const Card = (props) => {
         <Box2>
           <Grid padding="0.25rem" left>
             <Text bold size="16px">
-              <StyledPostTitleLink to={`/post/${id}`} key={id}>
+              <StyledPostTitleLink
+                to={isLoggedIn ? `/post/${id}` : "/login"}
+                key={id}
+              >
                 {post.title}
               </StyledPostTitleLink>
             </Text>

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import styled from "styled-components";
 import CategoryTab from "../components/CategoryTab";
-import { Content } from "../elements/Common";
+import { Content, PageTitle } from "../elements/Common";
 import Board from "../components/Board";
 
 export default function BoardPage() {
@@ -51,6 +51,7 @@ export default function BoardPage() {
   return (
     <>
       <Content>
+        <PageTitle>커뮤니티 </PageTitle>
         <CategoryTab
           tabNum={currentCategory.tabNum}
           displayName={currentCategory.displayName}

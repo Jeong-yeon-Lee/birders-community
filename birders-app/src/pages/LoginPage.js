@@ -23,6 +23,11 @@ const LoginPage = () => {
       <Column>
         <PageTitle>LOGIN</PageTitle>
         <p>{isLoggedIn ? "로그인" : "로그아웃"} 상태입니다.</p>
+        <p>
+          {!isLoggedIn
+            ? "로그인하시고 Birder's Community 에서 더 즐겁게 탐조해요!"
+            : ""}
+        </p>
         {isLoggedIn && <UserProfile userInfo={user} />}
         {isLoggedIn ? (
           <Button _onClick={logOut} margin="0.5rem auto">
