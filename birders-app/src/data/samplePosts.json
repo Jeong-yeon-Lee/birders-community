@@ -1,0 +1,25 @@
+[
+    {
+        "textContents": "샘플 텍스트입니다.",
+        "title": "샘플 타이틀",
+        "userId": "sampleuser",
+        "birdList": [
+            "참새",
+            "까치"
+        ],
+        "userDisplayName": "샘플 유저",
+        "createdAt": {
+            "seconds": 1676223825,
+            "nanoseconds": 579000000
+        },
+        "comments": [
+            {
+                "userDisplayName": "댓글유저",
+                "commentId": "commentId1",
+                "textContents": "샘플 댓글을 달았습니다",
+                "userId": "commentUserId1"
+            }
+        ],
+        "id": "t7ETFARLkTGkczdlo5nk"
+    }
+]

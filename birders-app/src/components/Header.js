@@ -66,7 +66,7 @@ export default function Header() {
           <StyledTitleLink to="/">Birder's Community</StyledTitleLink>
         </Column>
         <Column>
-          <StyledNavLink to="/post">Post</StyledNavLink>
+          {/* <StyledNavLink to="/post">Post</StyledNavLink> */}
           <StyledNavLink to="/board">Board</StyledNavLink>
         </Column>
         <Column>
