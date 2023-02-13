@@ -41,7 +41,7 @@ export default function EditorPage() {
       comments: comment(num),
       birdList: ["참새", "까치"],
     });
-    console.log(post);
+    //console.log(post);
   };
   return (
     <form onSubmit={onSubmit}>

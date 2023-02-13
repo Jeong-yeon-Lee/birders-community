@@ -20,7 +20,7 @@ function App() {
             <Route path={"/login"} element={<LoginPage />}></Route>
             <Route path={"/register"} element={<RegisterPage />}></Route>
             <Route path={"/board"} element={<BoardPage />}></Route>
-            <Route path={"/post"} element={<PostPage />}></Route>
+            <Route path={"/post/:id"} element={<PostPage />}></Route>
             <Route path={"/editor"} element={<EditorPage />}></Route>
           </Routes>
         </Layout>
