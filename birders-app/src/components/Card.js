@@ -2,7 +2,7 @@ import styled from "styled-components";
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../components/AuthProvider";
 import Grid from "../elements/Grid";
-import { Text } from "../elements/Common";
+import { Text, Tag } from "../elements/Common";
 import SampleImg from "../images/bird_sample.jpg";
 import { Link } from "react-router-dom";
 const Card = (props) => {
@@ -11,7 +11,18 @@ const Card = (props) => {
   // console.log(props);
   const { id, post } = props.post;
   const postCreateAt = new Date(post.createdAt).toLocaleString();
-
+  const convertCategory = (categoryName) => {
+    switch (categoryName) {
+      case "question":
+        return "새문답";
+      case "news":
+        return "새뉴스";
+      case "fieldNote":
+        return "탐조기록";
+      default:
+        return categoryName;
+    }
+  };
   return (
     <>
       <CardContainer>
@@ -32,9 +43,9 @@ const Card = (props) => {
               </StyledPostTitleLink>
             </Text>
             <Text size="14px"> {post.textContents}</Text>
-            <Text size="14px" color="#006e5f">
-              #{post.categoryName}
-            </Text>
+            <Tag size="sm" color="#006e5f">
+              #{convertCategory(post.categoryName)}
+            </Tag>
             <Text size="8px" color="grey">
               {postCreateAt}
             </Text>

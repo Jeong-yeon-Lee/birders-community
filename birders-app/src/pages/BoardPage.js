@@ -14,7 +14,8 @@ export default function BoardPage() {
 
   const [currentCategory, setCurrentCategory] = useState({
     tabNum: 0,
-    displayName: "all",
+    tabName: "all",
+    displayName: "전체",
   });
 
   // useEffect(() => {
@@ -42,6 +43,7 @@ export default function BoardPage() {
     setCurrentCategory({
       ...currentCategory,
       tabNum: obj.tabNum,
+      tabName: obj.tabName,
       displayName: obj.displayName,
     });
     //console.log(currentCategory, "board");
@@ -54,11 +56,11 @@ export default function BoardPage() {
         <PageTitle>커뮤니티 </PageTitle>
         <CategoryTab
           tabNum={currentCategory.tabNum}
-          displayName={currentCategory.displayName}
+          displayName={currentCategory.tabName}
           onCategoryChange={handleCategoryChange}
         />
         <ListContainer>
-          <Board currentCategoryName={currentCategory.displayName} />
+          <Board currentCategoryName={currentCategory.tabName} />
         </ListContainer>
       </Content>
     </>

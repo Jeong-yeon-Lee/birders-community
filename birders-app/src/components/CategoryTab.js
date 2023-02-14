@@ -13,7 +13,8 @@ const CategoryTab = (props) => {
     const tabNumber = parseInt(e.target.dataset.tab);
     props.onCategoryChange({
       tabNum: tabNumber,
-      displayName: e.target.dataset.name,
+      tabName: e.target.dataset.name,
+      displayName: e.target.value,
     });
   }
   return (

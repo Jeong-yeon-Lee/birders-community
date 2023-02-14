@@ -36,3 +36,18 @@ export const Content = styled.main`
   flex-grow: 1;
   padding: 2rem 0 4rem 0;
 `;
+
+export const Tag = styled.span`
+  background: #cce2df;
+  padding: ${(props) =>
+    props.size === "sm" ? "0.25rem 0.5rem" : "0.5rem 0.75rem"};
+  border-radius: 1rem;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-right: 0.5rem;
+  color: #006e5f;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: ${(props) => (props.size === "sm" ? "0.7rem" : "1rem")};
+`;

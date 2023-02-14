@@ -11,16 +11,16 @@ import CommentItem from "./CommentItem";
 
 export default function Comments(props) {
   const currentComments = props.comments;
-  console.log(currentComments, "comments");
-  useEffect(() => {}, []);
+  //console.log(currentComments, "comments");
   const result = currentComments.map((c) => (
     <CommentItem content={c} key={c.commentId} />
   ));
+  useEffect(() => {}, []);
 
   return (
     <>
       <CommentContainer>
-        <h3>몇몇 개의 댓글</h3>
+        <h3>{currentComments.length}개의 댓글</h3>
         <CommentInput>
           <textarea placeholder="댓글을 작성하세요"></textarea>
           <div>
