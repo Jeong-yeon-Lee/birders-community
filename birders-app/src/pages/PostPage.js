@@ -3,7 +3,7 @@ import AuthContext from "../components/AuthProvider";
 import { db } from "../firebaseConfig";
 import styled from "styled-components";
 import { doc, getDoc } from "firebase/firestore";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, Link } from "react-router-dom";
 import { Content, Tag, Title } from "../elements/Common";
 import Button from "../components/Button";
 import moment from "moment";
@@ -13,11 +13,14 @@ import Comments from "../components/Comments";
 export default function PostPage() {
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut } = context;
+  //console.log("user", user.email);
 
   let params = useParams();
   // const navigate = useNavigate();
   const postId = params.id;
   const [post, setPost] = useState({});
+  const [isLike, setIsLike] = useState(false);
+
   //console.log(params.id);
   //console.log(post.comments);
 
@@ -40,8 +43,10 @@ export default function PostPage() {
   const edit = () => {
     console.log("edit");
   };
+
   const toggleLike = () => {
     console.log("like");
+    setIsLike(!isLike);
   };
 
   const convertCategory = (categoryName) => {
@@ -60,26 +65,56 @@ export default function PostPage() {
     return (
       <>
         <Content>
-          <PostHeader>
-            <PostTitle>{post.title}</PostTitle>
-            <div>{moment(post.createdAt).format("YYYY년 MM월 DD일")}</div>
-            <div>{post.userDisplayName}</div>
-            <div>{post.likes} ♥︎ liked</div>
-            <Tag>#{convertCategory(post.categoryName)}</Tag>
-            <Button _onClick={toggleLike} margin="0.5rem auto">
-              좋아요
-            </Button>
-            <Button _onClick={edit} margin="0.5rem auto">
-              수정
-            </Button>
-            <Button _onClick={edit} margin="0.5rem auto">
-              삭제
-            </Button>
-          </PostHeader>
-          <PostContent>
-            <p>{post.textContents}</p>
-          </PostContent>
-          <Comments comments={post.comments ? post.comments : []} />
+          <Link to={"/board"}>목록으로</Link>
+          <PostContainer>
+            <PostHeader>
+              <PostTitle>{post.title}</PostTitle>
+              <PostInfoWrapper>
+                <Column>
+                  <WrapperRow>
+                    <Tag size={"sm"}>#{convertCategory(post.categoryName)}</Tag>
+                    <div>{post.userDisplayName}</div>
+                    <div>❇</div>
+                    <div>
+                      {moment(post.createdAt).format("YYYY년 MM월 DD일")}
+                    </div>
+                  </WrapperRow>
+                </Column>
+                <Column>
+                  <WrapperRow>
+                    {post.userId === user.email && (
+                      <div>
+                        <Button
+                          _onClick={edit}
+                          margin="0 0.25rem"
+                          fontSize={"12px"}
+                          padding={"0.25rem 0.5rem"}
+                        >
+                          수정
+                        </Button>
+                        <Button
+                          _onClick={edit}
+                          margin="0 1rem 0 0.25rem"
+                          fontSize={"12px"}
+                          padding={"0.25rem 0.5rem"}
+                        >
+                          삭제
+                        </Button>
+                      </div>
+                    )}
+
+                    <Like onClick={toggleLike} is_like={isLike}>
+                      {post.likes} ♥︎ liked
+                    </Like>
+                  </WrapperRow>
+                </Column>
+              </PostInfoWrapper>
+            </PostHeader>
+            <PostContent>
+              <p>{post.textContents}</p>
+            </PostContent>
+            <Comments comments={post.comments ? post.comments : []} />
+          </PostContainer>
         </Content>
       </>
     );
@@ -89,12 +124,12 @@ export default function PostPage() {
 }
 
 const PostHeader = styled.div`
-  padding: 0 1rem;
-  margin-top: 1rem;
+  padding-bottom: 1rem;
 `;
 const PostContent = styled.div`
-  padding: 0 1rem;
-  margin-top: 1rem;
+  border-top: 2px solid #4d9a8f;
+  padding: 1rem;
+  border-bottom: 2px solid #4d9a8f;
 `;
 const PostTitle = styled.h1`
   text-align: left;
@@ -106,14 +141,46 @@ const PostTitle = styled.h1`
   word-break: keep-all;
 `;
 
+const PostInfoWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+`;
+const Column = styled.div``;
 const CommentContainer = styled.div`
   display: flex;
   align-items: flex-start;
 `;
-const Wrapper = styled.div`
-  max-width: 930px;
-  width: 100%;
+const WrapperRow = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+const WrapperCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Like = styled.button`
+  border: 1px solid #006e5f;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 14px;
+  color: #006e5f;
+  cursor: pointer;
+  justify-content: space-between;
+
+  ${(props) =>
+    props.is_like
+      ? `background-color:#006e5f; border-color:#006e5f; color:white;`
+      : `background-color: #ffffff; border-color:#006e5f; color:006e5f;`};
+  background-color: ${(props) => (props.is_like ? "#006e5f" : "white")};
+`;
+
+const PostContainer = styled.div`
+  margin: 1rem 0;
 `;

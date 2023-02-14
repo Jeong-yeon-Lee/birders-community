@@ -11,7 +11,7 @@ export default function Board(props) {
   const [posts, setPosts] = useState([]);
   const postsCollectionRef = collection(db, "posts");
   const currentCategory = props.currentCategoryName;
-  console.log(currentCategory, "props");
+  //console.log(currentCategory, "props");
 
   useEffect(() => {
     let res = [];

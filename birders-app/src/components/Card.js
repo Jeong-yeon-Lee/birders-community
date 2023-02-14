@@ -25,56 +25,51 @@ const Card = (props) => {
   };
   return (
     <>
-      <CardContainer>
-        <Box1
-          src={post.thumbnailSrc ? post.thumbnailSrc : SampleImg}
-          onClick={() => {
-            console.log("이미지클릭");
-          }}
-        />
-        <Box2>
-          <Grid padding="0.25rem" left>
-            <Text bold size="16px">
-              <StyledPostTitleLink
-                to={isLoggedIn ? `/post/${id}` : "/login"}
-                key={id}
-              >
+      <StyledPostTitleLink to={isLoggedIn ? `/post/${id}` : "/login"} key={id}>
+        <CardContainer>
+          <Box1
+            src={post.thumbnailSrc ? post.thumbnailSrc : SampleImg}
+            onClick={() => {
+              console.log("이미지클릭");
+            }}
+          />
+          <Box2>
+            <Grid padding="0.25rem" left>
+              <Text bold size="16px">
                 {post.title}
-              </StyledPostTitleLink>
-            </Text>
-            <Text size="14px"> {post.textContents}</Text>
-            <Tag size="sm" color="#006e5f">
-              #{convertCategory(post.categoryName)}
-            </Tag>
-            <Text size="8px" color="grey">
-              {postCreateAt}
-            </Text>
-          </Grid>
-        </Box2>
-        <Box3>
-          <Grid is_flex padding="12px">
-            <Grid is_flex width="auto">
-              <Text size="8pt">by</Text>
-              <Text bold size="8pt" margin="0 0 0 5px">
-                {post.userDisplayName}
+              </Text>
+              <Text size="14px"> {post.textContents}</Text>
+              <Tag size="sm" color="#006e5f">
+                #{convertCategory(post.categoryName)}
+              </Tag>
+              <Text size="8px" color="grey">
+                {postCreateAt}
               </Text>
             </Grid>
-            <Grid is_flex width="auto">
-              <Text blod size="8pt" margin="0px 5px 0px 5px">
-                {post.likes} ♥︎ liked
-              </Text>
+          </Box2>
+          <Box3>
+            <Grid is_flex padding="12px">
+              <Grid is_flex width="auto">
+                <Text size="8pt">by</Text>
+                <Text bold size="8pt" margin="0 0 0 5px">
+                  {post.userDisplayName}
+                </Text>
+              </Grid>
+              <Grid is_flex width="auto">
+                <Text blod size="8pt" margin="0px 5px 0px 5px">
+                  {post.likes} ♥︎ liked
+                </Text>
+              </Grid>
             </Grid>
-          </Grid>
-        </Box3>
-      </CardContainer>
+          </Box3>
+        </CardContainer>
+      </StyledPostTitleLink>
     </>
   );
 };
 
 const StyledPostTitleLink = styled(Link)`
   text-decoration: none;
-  font-size: 16px;
-  font-weight: bold;
   color: black;
 `;
 const CardContainer = styled.div`

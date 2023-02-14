@@ -9,6 +9,7 @@ import EditorPage from "./pages/EditorPage";
 import Layout from "./components/Layout";
 //import UserStore from "./store/UserContext";
 import { AuthContextProvider } from "./components/AuthProvider";
+import EditorPageTest from "./pages/EditorPageTest"; //임시
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path={"/board"} element={<BoardPage />}></Route>
             <Route path={"/post/:id"} element={<PostPage />}></Route>
             <Route path={"/editor"} element={<EditorPage />}></Route>
+            <Route path={"/test"} element={<EditorPageTest />}></Route>
           </Routes>
         </Layout>
       </AuthContextProvider>
