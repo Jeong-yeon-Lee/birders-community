@@ -11,6 +11,7 @@ export default function EditorPage() {
       userDisplayName: `userDisplayName${num}`,
       textContents: `textContents${num}`,
       userId: `userId${num}`,
+      createdAt: Date.now(),
     };
   };
   const [post, setPost] = useState({
@@ -20,8 +21,11 @@ export default function EditorPage() {
     userId: `sampleuser${num}`,
     userDisplayName: `샘플 유저${num}`,
     editedAt: Date.now(),
-    comments: comment(num),
+    thumbnailSrc:
+      "https://images.unsplash.com/photo-1521730365094-d6978fa2ac8d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80",
+    comments: [comment(num), comment(10), comment(20)],
     birdList: ["참새", "까치"],
+    categoryName: "news",
   });
 
   const onSubmit = async (e) => {
@@ -38,7 +42,7 @@ export default function EditorPage() {
       userId: `sampleuser${num}`,
       userDisplayName: `샘플 유저${num}`,
       editedAt: Date.now(),
-      comments: comment(num),
+      comments: [comment(num), comment(10), comment(20)],
       birdList: ["참새", "까치"],
       thumbnailSrc:
         "https://images.unsplash.com/photo-1521730365094-d6978fa2ac8d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80",
