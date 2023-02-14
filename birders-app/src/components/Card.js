@@ -5,6 +5,7 @@ import Grid from "../elements/Grid";
 import { Text, Tag } from "../elements/Common";
 import SampleImg from "../images/bird_sample.jpg";
 import { Link } from "react-router-dom";
+import OnErrorImg from "../images/bird_sample.jpg";
 const Card = (props) => {
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut } = context;
@@ -23,6 +24,10 @@ const Card = (props) => {
         return categoryName;
     }
   };
+
+  const handleImgError = (e) => {
+    e.target.src = OnErrorImg;
+  };
   return (
     <>
       <StyledPostTitleLink to={isLoggedIn ? `/post/${id}` : "/login"} key={id}>
@@ -32,13 +37,17 @@ const Card = (props) => {
             onClick={() => {
               console.log("이미지클릭");
             }}
+            onError={handleImgError}
           />
           <Box2>
             <Grid padding="0.25rem" left>
-              <Text bold size="16px">
+              <TextTriming font_size="16px" bold padding={"0.5rem 0"}>
                 {post.title}
-              </Text>
-              <Text size="14px"> {post.textContents}</Text>
+              </TextTriming>
+              <TextTriming font_size="14px" padding={"0.25rem 0 0.75rem 0"}>
+                {" "}
+                {post.textContents}
+              </TextTriming>
               <Tag size="sm" color="#006e5f">
                 #{convertCategory(post.categoryName)}
               </Tag>
@@ -71,6 +80,17 @@ const Card = (props) => {
 const StyledPostTitleLink = styled(Link)`
   text-decoration: none;
   color: black;
+`;
+
+const TextTriming = styled.div`
+  width: 90%;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: ${(props) => props.font_size};
+  padding: ${(props) => (props.padding ? props.padding : "0")};
+  font-weight: ${(props) => (props.bold ? "600" : "400")};
 `;
 const CardContainer = styled.div`
   width: 250px;

@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import moment from "moment";
 import "moment/locale/ko";
 import Comments from "../components/Comments";
+import shortid from "shortid";
 
 export default function PostPage() {
   const context = useContext(AuthContext);
@@ -61,6 +62,17 @@ export default function PostPage() {
         return categoryName;
     }
   };
+
+  const processedText = post.textContents?.split("\n").map((line) => {
+    let keyId = shortid.generate();
+    return (
+      <p key={keyId}>
+        {line}
+        <br />
+      </p>
+    );
+  });
+
   if (isLoggedIn) {
     return (
       <>
@@ -110,9 +122,7 @@ export default function PostPage() {
                 </Column>
               </PostInfoWrapper>
             </PostHeader>
-            <PostContent>
-              <p>{post.textContents}</p>
-            </PostContent>
+            <PostContent>{processedText}</PostContent>
             <Comments comments={post.comments ? post.comments : []} />
           </PostContainer>
         </Content>
