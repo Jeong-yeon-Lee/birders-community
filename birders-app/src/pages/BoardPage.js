@@ -7,10 +7,14 @@ import styled from "styled-components";
 import CategoryTab from "../components/CategoryTab";
 import { Content, PageTitle } from "../elements/Common";
 import Board from "../components/Board";
+import Pagination from "../components/Pagination";
 
 export default function BoardPage() {
   //const [posts, setPosts] = useState([]);
   //const postsCollectionRef = collection(db, "posts");
+  //pagination
+  const [limit, setLimit] = useState(6);
+  const [pageNum, setPageNum] = useState(1);
 
   const [currentCategory, setCurrentCategory] = useState({
     tabNum: 0,
@@ -48,6 +52,11 @@ export default function BoardPage() {
     });
     //console.log(currentCategory, "board");
   };
+
+  const handlePageChange = (currentPageNum) => {
+    //console.log(obj);//????
+    setPageNum(currentPageNum);
+  };
   //console.log(posts);
   //const result = posts.map((post) => <Card post={post} key={post.id}></Card>);
   return (
@@ -62,6 +71,12 @@ export default function BoardPage() {
         <ListContainer>
           <Board currentCategoryName={currentCategory.tabName} />
         </ListContainer>
+        <Pagination
+          total={30}
+          limit={limit}
+          pageNum={pageNum}
+          setPage={handlePageChange}
+        />
       </Content>
     </>
   );
