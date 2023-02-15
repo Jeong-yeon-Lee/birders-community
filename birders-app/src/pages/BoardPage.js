@@ -30,7 +30,7 @@ export default function BoardPage() {
       //const data = await getDocs(postsCollectionRef);
       //console.log("dbpost", dbPosts);
       dbPosts.forEach((doc) => {
-        //console.log(doc);
+        console.log("doc", doc);
         const postObject = {
           ...doc.data(),
           id: doc.id,

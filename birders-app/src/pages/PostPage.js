@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../components/AuthProvider";
 import { db } from "../firebaseConfig";
 import styled from "styled-components";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, FieldValue, getDoc, updateDoc } from "firebase/firestore";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { Content, Tag, Title } from "../elements/Common";
 import Button from "../components/Button";
@@ -20,6 +20,9 @@ export default function PostPage() {
   // const navigate = useNavigate();
   const postId = params.id;
   const [post, setPost] = useState({});
+  const [postComments, setPostComments] = useState([]);
+  const [inputComment, setInputComment] = useState("");
+
   const [isLike, setIsLike] = useState(false);
 
   //console.log(params.id);
@@ -40,6 +43,23 @@ export default function PostPage() {
     };
     getPost(postId);
   }, []);
+
+  const updatePost = async (currentComments) => {
+    const docRef = doc(db, "posts", postId);
+    //comment만 추가하는게 잘 안되어서 post 통째로 update...
+    const data = { post };
+    //await db.doc(`posts/${postId}`).update({ comments: [currentComments] });
+    await updateDoc(docRef, data)
+      .then((docRef) => {
+        console.log("Value of an Existing Document Field has been updated");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // await docRef.update({
+    //   comments: FieldValue.arrayUnion(...currentComments),
+    // });
+  };
 
   const edit = () => {
     console.log("edit");
@@ -73,6 +93,31 @@ export default function PostPage() {
     );
   });
 
+  const handleCommentSubmit = (commentInput) => {
+    console.log(commentInput, "submit");
+    let commentId = shortid.generate();
+    const newComment = {
+      commentId: commentId,
+      userDisplayName: user.displayName,
+      textContents: commentInput,
+      userId: user.email,
+      createdAt: Date.now(),
+      postId: postId,
+    };
+    let postCopy = post;
+    //여기 하는중,,,,,,,,
+    // if (post.comments.length === 0 || !post.comments) {
+    //   setPostComments([newComment]);
+    // } else {
+    //   setPostComments([...post.comments, newComment]);
+    // }
+    setPostComments([...post.comments, newComment]);
+    postCopy.comments = [...post.comments, newComment];
+    updatePost([...post.comments, newComment]); //이렇게 안하면 왜 처음엔 빈것이 가는것...
+    setPost(postCopy);
+  };
+  //console.log("밖", postComments);
+  //console.log("comments확인", post.comments);
   if (isLoggedIn) {
     return (
       <>
@@ -123,7 +168,10 @@ export default function PostPage() {
               </PostInfoWrapper>
             </PostHeader>
             <PostContent>{processedText}</PostContent>
-            <Comments comments={post.comments ? post.comments : []} />
+            <Comments
+              comments={post.comments?.length > 0 ? post.comments : []}
+              updateComment={handleCommentSubmit}
+            />
           </PostContainer>
         </Content>
       </>

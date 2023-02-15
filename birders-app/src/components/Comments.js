@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import AuthContext from "../components/AuthProvider";
 import { db } from "../firebaseConfig";
 import styled from "styled-components";
 import { doc, getDoc } from "firebase/firestore";
@@ -10,8 +11,12 @@ import "moment/locale/ko";
 import CommentItem from "./CommentItem";
 
 export default function Comments(props) {
+  const context = useContext(AuthContext);
+  const { user, isLoggedIn, logIn, logOut } = context;
   const [commentInput, setCommentInput] = useState("");
   const currentComments = props.comments;
+  const updateComment = props.updateComment;
+
   //console.log(currentComments, "comments");
   let listOrder = 1;
   const result = currentComments.map((c) => (
@@ -21,12 +26,13 @@ export default function Comments(props) {
   useEffect(() => {}, []);
   const handleChange = (e) => {
     setCommentInput(e.target.value);
-    console.log(commentInput);
+    //console.log(commentInput);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    alert(`${commentInput}`);
+    updateComment(commentInput);
+    setCommentInput("");
+    //alert(`${commentInput}`);
   };
   return (
     <>
@@ -34,19 +40,21 @@ export default function Comments(props) {
         <Text color={"#006e5f"} size={"18px"} bold>
           {currentComments.length}개의 댓글
         </Text>
-        <CommentInput>
-          <textarea
-            placeholder="댓글을 작성하세요"
-            value={commentInput}
-            name="commentText"
-            onChange={handleChange}
-          ></textarea>
-          <div>
-            <Button type="submit" _onClick={handleSubmit}>
-              작성
-            </Button>
-          </div>
-        </CommentInput>
+
+        <Form onSubmit={handleSubmit}>
+          <CommentInput>
+            <textarea
+              placeholder="댓글을 작성하세요"
+              value={commentInput}
+              name="commentText"
+              onChange={handleChange}
+            ></textarea>
+            <div>
+              <Button type="submit">작성</Button>
+            </div>
+          </CommentInput>
+        </Form>
+
         {currentComments.length > 0 && result}
       </CommentContainer>
     </>
@@ -82,4 +90,8 @@ const CommentInput = styled.div`
       color: gray;
     }
   }
+`;
+
+const Form = styled.form`
+  width: 100%;
 `;
