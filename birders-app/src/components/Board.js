@@ -11,43 +11,22 @@ export default function Board(props) {
   const [posts, setPosts] = useState([]);
   const postsCollectionRef = collection(db, "posts");
   const currentCategory = props.currentCategoryName;
-  //console.log(currentCategory, "props");
+  const currentPosts = props.posts;
 
-  useEffect(() => {
-    let res = [];
-    const getPosts = async () => {
-      const dbPosts = await getDocs(postsCollectionRef);
-      //const data = await getDocs(postsCollectionRef);
-      //console.log("dbpost", dbPosts);
-      dbPosts.forEach((doc) => {
-        //console.log(doc);
-        const postObject = {
-          ...doc.data(),
-          id: doc.id,
-        };
-        res.push(postObject);
-        // setPosts((prev) => [postObject, ...prev]);
-        //setPosts([...posts, postObject])//왜 안되지?
-        setPosts([...res]);
-      });
-    };
-    getPosts();
-  }, []);
-
-  //console.log(posts);
-  const filteredPosts = posts.filter(
+  const filteredPosts = currentPosts?.filter(
     (p) => p.post.categoryName === currentCategory
   );
-  //console.log(filteredPosts);
-  //console.log(posts[0].post.categoryName);
-  const filteredResult = filteredPosts.map((post) => (
+
+  const filteredResult = filteredPosts?.map((post) => (
     <Card post={post} key={post.id}></Card>
   ));
-  const result = posts.map((post) => <Card post={post} key={post.id}></Card>);
+  const result = currentPosts.map((post) => (
+    <Card post={post} key={post.id}></Card>
+  ));
   if (currentCategory === "all") {
     return (
       <>
-        <ListContainer>{posts.length > 0 && result}</ListContainer>
+        <ListContainer>{currentPosts.length > 0 && result}</ListContainer>
       </>
     );
   } else {

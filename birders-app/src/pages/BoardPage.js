@@ -10,8 +10,9 @@ import Board from "../components/Board";
 import Pagination from "../components/Pagination";
 
 export default function BoardPage() {
-  //const [posts, setPosts] = useState([]);
-  //const postsCollectionRef = collection(db, "posts");
+  const [posts, setPosts] = useState([]);
+  const postsCollectionRef = collection(db, "posts");
+
   //pagination
   const [limit, setLimit] = useState(6);
   const [pageNum, setPageNum] = useState(1);
@@ -22,26 +23,26 @@ export default function BoardPage() {
     displayName: "전체",
   });
 
-  // useEffect(() => {
-  //   let res = [];
-  //   const getPosts = async () => {
-  //     const dbPosts = await getDocs(postsCollectionRef);
-  //     //const data = await getDocs(postsCollectionRef);
-  //     //console.log("dbpost", dbPosts);
-  //     dbPosts.forEach((doc) => {
-  //       //console.log(doc);
-  //       const postObject = {
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       };
-  //       res.push(postObject);
-  //       // setPosts((prev) => [postObject, ...prev]);
-  //       //setPosts([...posts, postObject])//왜 안되지?
-  //       setPosts([...res]);
-  //     });
-  //   };
-  //   getPosts();
-  // }, []);
+  useEffect(() => {
+    let res = [];
+    const getPosts = async () => {
+      const dbPosts = await getDocs(postsCollectionRef);
+      //const data = await getDocs(postsCollectionRef);
+      //console.log("dbpost", dbPosts);
+      dbPosts.forEach((doc) => {
+        //console.log(doc);
+        const postObject = {
+          ...doc.data(),
+          id: doc.id,
+        };
+        res.push(postObject);
+        // setPosts((prev) => [postObject, ...prev]);
+        //setPosts([...posts, postObject])//왜 안되지?
+        setPosts([...res]);
+      });
+    };
+    getPosts();
+  }, []);
 
   const handleCategoryChange = (obj) => {
     setCurrentCategory({
@@ -57,8 +58,7 @@ export default function BoardPage() {
     //console.log(obj);//????
     setPageNum(currentPageNum);
   };
-  //console.log(posts);
-  //const result = posts.map((post) => <Card post={post} key={post.id}></Card>);
+
   return (
     <>
       <Content>
@@ -69,7 +69,7 @@ export default function BoardPage() {
           onCategoryChange={handleCategoryChange}
         />
         <ListContainer>
-          <Board currentCategoryName={currentCategory.tabName} />
+          <Board posts={posts} currentCategoryName={currentCategory.tabName} />
         </ListContainer>
         <Pagination
           total={30}
