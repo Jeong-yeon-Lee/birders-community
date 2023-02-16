@@ -51,14 +51,14 @@ const StyledNavLink = styled(Link)`
 const ButtonLink = styled(Link)`
   text-decoration: none;
   font-size: 16px;
-  color: white;
+  color: ${(props) => (props.color ? props.color : "white")};
 `;
 
 export default function Header() {
   const context = useContext(AuthContext);
-  const { user, isLoggedIn, logIn, logOut } = context;
+  const { user, isLoggedIn, logIn, logOut, signUp } = context;
   //   console.log(isLoggedIn);
-  console.log(user);
+  //console.log(user);
   return (
     <SHeader>
       <Wrapper>
@@ -79,9 +79,16 @@ export default function Header() {
             </Button>
           )}
           {!isLoggedIn && (
-            <Button isPrimary={true} margin="0">
-              <ButtonLink to="/login">LOGIN</ButtonLink>
-            </Button>
+            <div>
+              <Button isPrimary={true} margin="0 0.5rem 0 0">
+                <ButtonLink to="/login">LOGIN</ButtonLink>
+              </Button>
+              <Button margin="0">
+                <ButtonLink to="/register" color={"#006e5f"}>
+                  SIGNUP
+                </ButtonLink>
+              </Button>
+            </div>
           )}
         </Column>
       </Wrapper>
