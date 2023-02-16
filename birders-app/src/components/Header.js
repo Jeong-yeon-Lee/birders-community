@@ -70,7 +70,11 @@ export default function Header() {
           <StyledNavLink to="/board">Board</StyledNavLink>
         </Column>
         <Column>
-          {isLoggedIn && <div>안녕하세요 , {user?.displayName} 님</div>}
+          {isLoggedIn && (
+            <StyledNavLink to="/my">
+              {user?.displayName} 님의 마이페이지
+            </StyledNavLink>
+          )}
         </Column>
         <Column>
           {isLoggedIn && (
