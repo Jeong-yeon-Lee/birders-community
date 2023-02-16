@@ -41,6 +41,8 @@ export const Tag = styled.span`
   background: #cce2df;
   padding: ${(props) =>
     props.size === "sm" ? "0.25rem 0.5rem" : "0.5rem 0.75rem"};
+  margin: ${(props) => (props.margin ? props.margin : "0")};
+
   border-radius: 1rem;
   display: inline-flex;
   -webkit-box-align: center;

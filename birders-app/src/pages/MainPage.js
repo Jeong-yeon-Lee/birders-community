@@ -34,7 +34,7 @@ export default function MainPage() {
   const postsOrderBy = query(postsCollectionRef, orderBy("createdAt", "desc"));
 
   const getPosts = async () => {
-    console.log("야후");
+    //console.log("야후");
     let res = [];
 
     const postsQuery = query(
@@ -52,7 +52,7 @@ export default function MainPage() {
       res.push(postObject);
 
       setPosts([...res]);
-      console.log([...res]);
+      //console.log([...res]);
     });
   };
 
@@ -60,7 +60,7 @@ export default function MainPage() {
     //const snapshot = await postsCollectionRef.count().get();
     //console.log(snapshot.data().count);
     querySnapshot = await getDocs(postsOrderBy);
-    console.log(querySnapshot, "querysnap");
+    //console.log(querySnapshot, "querysnap");
     setPostsCount(querySnapshot.size);
     //setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1].data());
   };
@@ -85,12 +85,12 @@ export default function MainPage() {
     } else {
       offset = offset - 1;
     }
-    console.log(offset);
+    //console.log(offset);
     querySnapshot = await getDocs(postsOrderBy);
     setLastDoc(querySnapshot.docs[offset]);
   };
 
-  console.log(lastDoc, "lastdoc");
+  //console.log(lastDoc, "lastdoc");
   return (
     <>
       <CarouselComponent></CarouselComponent>

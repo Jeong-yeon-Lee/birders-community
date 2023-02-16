@@ -10,6 +10,7 @@ import moment from "moment";
 import "moment/locale/ko";
 import Comments from "../components/Comments";
 import shortid from "shortid";
+import SampleImg from "../images/bird_sample.jpg";
 
 export default function PostPage() {
   const context = useContext(AuthContext);
@@ -109,6 +110,9 @@ export default function PostPage() {
   };
   //console.log("밖", postComments);
   //console.log("comments확인", post.comments);
+  const onErrorImg = (e) => {
+    e.target.src = SampleImg;
+  };
   if (isLoggedIn) {
     return (
       <>
@@ -120,12 +124,21 @@ export default function PostPage() {
               <PostInfoWrapper>
                 <Column>
                   <WrapperRow>
-                    <Tag size={"sm"}>#{convertCategory(post.categoryName)}</Tag>
+                    <UserProfileImg>
+                      <img
+                        src={user.photoURL}
+                        alt="user profile"
+                        onError={onErrorImg}
+                      />
+                    </UserProfileImg>
                     <div>{post.userDisplayName}</div>
                     <div>❇</div>
                     <div>
                       {moment(post.createdAt).format("YYYY년 MM월 DD일")}
                     </div>
+                    <Tag size={"sm"} margin={"0 0 0 0.75rem"}>
+                      #{convertCategory(post.categoryName)}
+                    </Tag>
                   </WrapperRow>
                 </Column>
                 <Column>
@@ -171,7 +184,17 @@ export default function PostPage() {
     return <Navigate to="/"></Navigate>;
   }
 }
-
+const UserProfileImg = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 0.5rem;
+  & img {
+    width: 100%;
+    object-fit: cover;
+  }
+`;
 const PostHeader = styled.div`
   padding-bottom: 1rem;
 `;

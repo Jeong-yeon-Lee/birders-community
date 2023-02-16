@@ -1,7 +1,16 @@
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../components/AuthProvider";
 import { db } from "../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  count,
+  onSnapshot,
+  startAfter,
+} from "firebase/firestore";
 import { Link, Navigate } from "react-router-dom";
 import Card from "../components/Card";
 import styled from "styled-components";
@@ -15,11 +24,16 @@ export default function BoardPage() {
   const { isLoggedIn } = context;
 
   const [posts, setPosts] = useState([]);
-  const postsCollectionRef = collection(db, "posts");
 
   //pagination
-  const [limit, setLimit] = useState(6);
+  const [postsCount, setPostsCount] = useState(0);
+  const [pageLimit, setPageLimit] = useState(3);
   const [pageNum, setPageNum] = useState(1);
+  const [lastDoc, setLastDoc] = useState({});
+
+  const postsCollectionRef = collection(db, "posts");
+  let querySnapshot;
+  const postsOrderBy = query(postsCollectionRef, orderBy("createdAt", "desc"));
 
   const [currentCategory, setCurrentCategory] = useState({
     tabNum: 0,
@@ -27,26 +41,41 @@ export default function BoardPage() {
     displayName: "전체",
   });
 
-  useEffect(() => {
+  const getPosts = async () => {
     let res = [];
-    const getPosts = async () => {
-      const dbPosts = await getDocs(postsCollectionRef);
-      //const data = await getDocs(postsCollectionRef);
-      //console.log("dbpost", dbPosts);
-      dbPosts.forEach((doc) => {
-        //console.log("doc", doc);
-        const postObject = {
-          ...doc.data(),
-          id: doc.id,
-        };
-        res.push(postObject);
-        // setPosts((prev) => [postObject, ...prev]);
-        //setPosts([...posts, postObject])//왜 안되지?
-        setPosts([...res]);
-      });
-    };
+
+    const postsQuery = query(
+      postsCollectionRef,
+      orderBy("createdAt", "desc"),
+      startAfter(lastDoc),
+      limit(3)
+    );
+    const dbPosts = await getDocs(postsQuery);
+    dbPosts.forEach((doc) => {
+      const postObject = {
+        ...doc.data(),
+        id: doc.id,
+      };
+      res.push(postObject);
+      setPosts([...res]);
+    });
+  };
+
+  const getPostsCount = async () => {
+    querySnapshot = await getDocs(postsOrderBy);
+    setPostsCount(querySnapshot.size);
+  };
+
+  useEffect(() => {
+    //let res = [];
+    getPostsCount();
     getPosts();
   }, []);
+
+  useEffect(() => {
+    //let res = [];
+    getPosts();
+  }, [lastDoc]);
 
   const handleCategoryChange = (obj) => {
     setCurrentCategory({
@@ -58,38 +87,39 @@ export default function BoardPage() {
     //console.log(currentCategory, "board");
   };
 
-  const handlePageChange = (currentPageNum) => {
-    //console.log(obj);//????
+  const handlePageChange = async (currentPageNum) => {
     setPageNum(currentPageNum);
+    let offset = (currentPageNum - 1) * pageLimit;
+    if (offset <= 0) {
+      offset = 0;
+    } else {
+      offset = offset - 1;
+    }
+    querySnapshot = await getDocs(postsOrderBy);
+    setLastDoc(querySnapshot.docs[offset]);
   };
-  if (isLoggedIn) {
-    return (
-      <>
-        <Content>
-          <PageTitle>커뮤니티 </PageTitle>
-          <CategoryTab
-            tabNum={currentCategory.tabNum}
-            displayName={currentCategory.tabName}
-            onCategoryChange={handleCategoryChange}
-          />
-          <ListContainer>
-            <Board
-              posts={posts}
-              currentCategoryName={currentCategory.tabName}
-            />
-          </ListContainer>
-          <Pagination
-            total={30}
-            limit={limit}
-            pageNum={pageNum}
-            setPage={handlePageChange}
-          />
-        </Content>
-      </>
-    );
-  } else {
-    return <Navigate to="/login"></Navigate>;
-  }
+
+  return (
+    <>
+      <Content>
+        <PageTitle>커뮤니티 </PageTitle>
+        <CategoryTab
+          tabNum={currentCategory.tabNum}
+          displayName={currentCategory.tabName}
+          onCategoryChange={handleCategoryChange}
+        />
+        <ListContainer>
+          <Board posts={posts} currentCategoryName={currentCategory.tabName} />
+        </ListContainer>
+        <Pagination
+          total={postsCount}
+          limit={pageLimit}
+          pageNum={pageNum}
+          setPage={handlePageChange}
+        />
+      </Content>
+    </>
+  );
 }
 
 const ListContainer = styled.div`

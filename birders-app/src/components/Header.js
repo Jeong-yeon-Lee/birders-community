@@ -67,7 +67,7 @@ export default function Header() {
         </Column>
         <Column>
           {/* <StyledNavLink to="/post">Post</StyledNavLink> */}
-          <StyledNavLink to="/board">Board</StyledNavLink>
+          <StyledNavLink to="/board">커뮤니티</StyledNavLink>
         </Column>
         <Column>
           {isLoggedIn && (

@@ -61,7 +61,7 @@ export default function EditorPage() {
   };
   //console.log("test", selected);
   //console.log("test", userInputs);
-  console.log(userInputs);
+  //console.log(userInputs);
   const updatePost = () => {
     const {
       inputTitle,
