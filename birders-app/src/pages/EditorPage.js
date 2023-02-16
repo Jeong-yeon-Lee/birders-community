@@ -5,12 +5,13 @@ import { collection, addDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 import { Content, Tag, Title } from "../elements/Common";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export default function EditorPage() {
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut } = context;
   //console.log(user);
-
+  const navigate = useNavigate();
   const [userInputs, setUserInputs] = useState({
     inputTitle: "",
     inputTextContents: "",
@@ -101,7 +102,16 @@ export default function EditorPage() {
 
     await addDoc(collection(db, "posts"), {
       ...post,
-    });
+    })
+      .then(() => {
+        alert("게시 완료!");
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        alert("문제가 발생했어요. 다시 시도해주세요");
+        navigate("/");
+      });
 
     //console.log(post);
   };
