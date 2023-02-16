@@ -66,48 +66,17 @@ export default function BoardPage() {
     });
   };
 
-  const getSearchedPosts = async () => {
-    let res = [];
-
-    const postsQuery = query(
-      postsBySearchText,
-      orderBy("createdAt", "desc"),
-      startAfter(lastDoc),
-      limit(3)
-    );
-    const dbPosts = await getDocs(postsQuery);
-    dbPosts.forEach((doc) => {
-      const postObject = {
-        ...doc.data(),
-        id: doc.id,
-      };
-      res.push(postObject);
-      setPosts([...res]);
-    });
-  };
-
-  const getPostsCount = async (queryType) => {
-    console.log(queryType);
-    if (queryType === "default") {
-      querySnapshot = await getDocs(postsOrderBy);
-    } else if (queryType === "search") {
-      querySnapshot = await getDocs(postsBySearchText);
-    }
+  const getPostsCount = async () => {
+    querySnapshot = await getDocs(postsOrderBy);
 
     setPostsCount(querySnapshot.size);
   };
 
   useEffect(() => {
     //let res = [];
-    getPostsCount("default");
+    getPostsCount();
     getPosts();
   }, []);
-
-  useEffect(() => {
-    //let res = [];
-    getPostsCount("search");
-    getPosts();
-  }, [searchText]);
 
   useEffect(() => {
     //let res = [];
@@ -137,16 +106,7 @@ export default function BoardPage() {
   };
   const handlePostsSearch = (searchInput) => {
     setSearchText(searchInput);
-    postsBySearchText = query(
-      postsCollectionRef,
-      where("title", "in", [searchInput])
-    );
   };
-  useEffect(() => {
-    if (searchText.trim().length !== 0) {
-      //postsBySearchText= query(postsCollectionRef, where('title','in',searchInput));
-    }
-  }, [searchText]);
 
   return (
     <>
