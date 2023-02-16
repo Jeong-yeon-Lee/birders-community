@@ -58,7 +58,7 @@ export default function Header() {
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut } = context;
   //   console.log(isLoggedIn);
-  //   console.log(user?.displayName);
+  console.log(user);
   return (
     <SHeader>
       <Wrapper>

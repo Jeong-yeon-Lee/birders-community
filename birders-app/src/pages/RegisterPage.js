@@ -1,12 +1,21 @@
-import React, { useState } from "react";
-import { auth } from "../firebaseConfig";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import React, { useState, useEffect, useContext } from "react";
+import AuthContext from "../components/AuthProvider";
+import { db } from "../firebaseConfig";
+import styled from "styled-components";
+import { doc, FieldValue, getDoc, updateDoc } from "firebase/firestore";
+import { useParams, Navigate, Link } from "react-router-dom";
+import { Content, Tag, Title } from "../elements/Common";
+import Button from "../components/Button";
 
 export default function RegisterPage() {
+  const context = useContext(AuthContext);
+  const { user, isLoggedIn, logIn, logOut, signUp } = context;
   //Email
   const [userInputs, setUserInputs] = useState({
-    nickname: "",
+    email: "",
     password: "",
+    displayName: "",
+    photoURL: "",
   });
   const handleChange = (e) => {
     setUserInputs({ ...userInputs, [e.target.name]: e.target.value });
@@ -14,29 +23,47 @@ export default function RegisterPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { nickname, password } = userInputs;
-    alert(`${nickname} and ${password}`);
+    const { email, password, displayName, photoURL } = userInputs;
+    // alert(`${email} and ${password}`);
+
+    signUp(email, password, displayName, photoURL);
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <label>닉네임: </label>
+        <label>이메일: </label>
         <input
           type="text"
-          name="nickname"
+          name="email"
           onChange={handleChange}
-          value={userInputs.nickname}
+          value={userInputs.email}
+          placeholder="Email"
         />
         <br />
         <label>패스워드: </label>
         <input
-          type="text"
+          type="password"
           name="password"
           onChange={handleChange}
           value={userInputs.password}
+          placeholder="Password"
         />
-        <input type="submit" value="이메일로 로그인" />
+        <input
+          type="text"
+          name="displayName"
+          onChange={handleChange}
+          value={userInputs.displayName}
+          placeholder="DisplayName"
+        />
+        <input
+          type="text"
+          name="photoURL"
+          onChange={handleChange}
+          value={userInputs.photoURL}
+          placeholder="photoURL"
+        />
+        <input type="submit" value="회원가입" />
       </form>
     </div>
   );

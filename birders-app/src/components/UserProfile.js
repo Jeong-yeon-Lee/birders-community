@@ -20,14 +20,14 @@ const Img = styled.img`
 `;
 
 const Column = styled.div``;
+const onErrorImg = (e) => {
+  e.target.src = SampleImg;
+};
 export default function UserProfile(props) {
   return (
     <FilledBox>
       <Column>
-        <Img
-          src={props.userInfo.photoURL ? props.userInfo.photoURL : SampleImg}
-          alt="profile"
-        />
+        <Img src={props.userInfo.photoURL} alt="profile" onError={onErrorImg} />
       </Column>
       <Column>
         <p>{props?.userInfo.displayName}</p> <p>{props?.userInfo.email}</p>
