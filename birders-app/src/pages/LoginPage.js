@@ -2,18 +2,10 @@ import React, { useContext, useState } from "react";
 import AuthContext from "../components/AuthProvider";
 import GoogleButton from "react-google-button";
 import styled from "styled-components";
-import { PageTitle } from "../elements/Common";
+import { PageTitle, Content } from "../elements/Common";
 import Button from "../components/Button";
 import UserProfile from "../components/UserProfile";
 
-const Wrapper = styled.div`
-  max-width: 930px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const Column = styled.div``;
 const LoginPage = () => {
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut, emailLogIn } = context;
@@ -34,47 +26,130 @@ const LoginPage = () => {
   };
 
   return (
-    <Wrapper>
-      <Column>
-        <PageTitle>LOGIN</PageTitle>
-        <p>{isLoggedIn ? "로그인" : "로그아웃"} 상태입니다.</p>
-        <p>
-          {!isLoggedIn
-            ? "로그인하시고 Birder's Community 에서 더 즐겁게 탐조해요!"
-            : ""}
-        </p>
-        <form onSubmit={handleSubmit}>
-          <label>이메일: </label>
-          <input
-            type="text"
-            name="email"
-            onChange={handleChange}
-            value={userInputs.email}
-            placeholder="Email"
-          />
-          <br />
-          <label>패스워드: </label>
-          <input
-            type="password"
-            name="password"
-            onChange={handleChange}
-            value={userInputs.password}
-            placeholder="Password"
-          />
+    <Content>
+      <LoginContainer>
+        <Wrapper>
+          <PageTitle>LOGIN</PageTitle>
+          <p>{!isLoggedIn ? "로그인 후 서비스를 이용할 수 있어요." : ""}</p>
+          <form onSubmit={handleSubmit}>
+            <label>이메일: </label>
+            <LoginInput>
+              <input
+                type="text"
+                name="email"
+                onChange={handleChange}
+                value={userInputs.email}
+                placeholder="Email"
+              />
+            </LoginInput>
 
-          <input type="submit" value="로그인" />
-        </form>
-        {isLoggedIn && <UserProfile userInfo={user} />}
-        {isLoggedIn ? (
-          <Button _onClick={logOut} margin="0.5rem auto">
-            로그아웃
-          </Button>
-        ) : (
-          <GoogleButton onClick={() => logIn("google")} name="google" />
-        )}
-      </Column>
-    </Wrapper>
+            <br />
+            <label>패스워드: </label>
+            <LoginInput>
+              <input
+                type="password"
+                name="password"
+                onChange={handleChange}
+                value={userInputs.password}
+                placeholder="Password"
+              />
+            </LoginInput>
+
+            <LoginInput>
+              <input type="submit" value="로그인" />
+            </LoginInput>
+          </form>
+          <P> OR</P>
+          {isLoggedIn && <UserProfile userInfo={user} />}
+          {isLoggedIn ? (
+            <Button _onClick={logOut} margin="0.5rem auto">
+              로그아웃
+            </Button>
+          ) : (
+            <GoogleButton onClick={() => logIn("google")} name="google" />
+          )}
+        </Wrapper>
+      </LoginContainer>
+    </Content>
   );
 };
 
 export default LoginPage;
+const P = styled.p`
+  text-align: center;
+`;
+const Wrapper = styled.div`
+  display: flex;
+  width: 240px;
+  flex-direction: column;
+`;
+const LoginContainer = styled.div`
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+`;
+const LoginInput = styled.div`
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+
+  & input {
+    box-sizing: border-box;
+    width: 100%;
+    resize: none;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    border: 1px solid gray;
+    min-height: 2rem;
+    font-size: ${(props) => (props.font_size ? props.font_size : "14px")};
+    color: rgb(33, 37, 41);
+    line-height: 1.75;
+    &::placeholder {
+      color: gray;
+    }
+  }
+  & input[type="submit"] {
+    box-sizing: border-box;
+    width: 100%;
+    resize: none;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    border: 1px solid gray;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    border: 0;
+    min-height: 2rem;
+    font-size: ${(props) => (props.font_size ? props.font_size : "14px")};
+    color: white;
+    line-height: 1.75;
+    &::placeholder {
+      color: gray;
+    }
+    cursor: pointer;
+    background-color: #006e5f;
+  }
+
+  & input[type="button"] {
+    box-sizing: border-box;
+    width: 100%;
+    resize: none;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    min-height: 2rem;
+    font-size: ${(props) => (props.font_size ? props.font_size : "14px")};
+    color: black;
+    line-height: 1.75;
+    &::placeholder {
+      color: gray;
+    }
+    cursor: pointer;
+    background-color: #d3dde4;
+    border: 0;
+  }
+`;

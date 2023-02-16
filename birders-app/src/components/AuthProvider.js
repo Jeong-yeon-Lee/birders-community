@@ -10,6 +10,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext({
   user: {},
@@ -23,23 +24,38 @@ const AuthContext = createContext({
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
   //const [isLoggedIn, setIsLoggedIn] = useState({});
+  const navigate = useNavigate();
 
   //social logins
-  const logIn = (providerName) => {
+  const logIn = async (providerName) => {
     let provider;
     if (providerName === "google") {
       provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider);
+      try {
+        let data = signInWithPopup(auth, provider).then(() => {
+          navigate("/");
+        });
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      }
     }
   };
 
   //email login
   const emailLogIn = async (email, password) => {
     try {
-      let data = await signInWithEmailAndPassword(auth, email, password);
-      console.log(data);
+      let data = await signInWithEmailAndPassword(auth, email, password).then(
+        () => {
+          navigate("/");
+        }
+      );
+      //console.log(data);
     } catch (error) {
-      console.log(error);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
     }
   };
 
@@ -53,8 +69,21 @@ export const AuthContextProvider = ({ children }) => {
 
   const signUp = async (email, password, displayName, photoURL) => {
     try {
-      let data = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(data);
+      let data = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      ).catch((error) => {
+        const errorCode = error.code;
+        //const errorMessage = error.message;
+        console.log(errorCode);
+        if (errorCode === "auth/email-already-in-use") {
+          alert("이미 있는 계정이에요, 로그인해주세요.");
+        } else {
+          alert("오류! 다시 시도해주세요.");
+        }
+      });
+      //console.log(data);
       if (data) {
         updateProfile(auth.currentUser, {
           displayName: displayName,
@@ -63,12 +92,16 @@ export const AuthContextProvider = ({ children }) => {
           .then(() => {
             // Profile updated!
             // ...
-            console.log("Profile updated!");
+
+            alert("회원가입을 축하합니다.");
+            navigate("/");
           })
           .catch((error) => {
             // An error occurred
             // ...
-            console.log("An error occurred");
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
           });
       }
     } catch (error) {

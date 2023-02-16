@@ -78,9 +78,16 @@ export default function Header() {
         </Column>
         <Column>
           {isLoggedIn && (
-            <Button isPrimary={true} _onClick={logOut} margin="0">
-              <ButtonLink to="/">LOGOUT</ButtonLink>
-            </Button>
+            <div>
+              <Button margin="0 0.5rem">
+                <ButtonLink to="/editor" color={"#006e5f"}>
+                  글쓰기
+                </ButtonLink>
+              </Button>
+              <Button isPrimary={true} _onClick={logOut} margin="0">
+                <ButtonLink to="/">LOGOUT</ButtonLink>
+              </Button>
+            </div>
           )}
           {!isLoggedIn && (
             <div>

@@ -22,7 +22,7 @@ const MyPage = () => {
   return (
     <Wrapper>
       <Column>
-        <PageTitle>My Page...</PageTitle>
+        <PageTitle>My Page</PageTitle>
         <p>{isLoggedIn ? "로그인" : "로그아웃"} 상태입니다.</p>
         {isLoggedIn && <UserProfile userInfo={user} />}
       </Column>

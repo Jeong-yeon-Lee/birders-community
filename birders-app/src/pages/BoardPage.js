@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import AuthContext from "../components/AuthProvider";
 import { db } from "../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Card from "../components/Card";
 import styled from "styled-components";
 import CategoryTab from "../components/CategoryTab";
@@ -10,6 +11,9 @@ import Board from "../components/Board";
 import Pagination from "../components/Pagination";
 
 export default function BoardPage() {
+  const context = useContext(AuthContext);
+  const { isLoggedIn } = context;
+
   const [posts, setPosts] = useState([]);
   const postsCollectionRef = collection(db, "posts");
 
@@ -58,28 +62,34 @@ export default function BoardPage() {
     //console.log(obj);//????
     setPageNum(currentPageNum);
   };
-
-  return (
-    <>
-      <Content>
-        <PageTitle>커뮤니티 </PageTitle>
-        <CategoryTab
-          tabNum={currentCategory.tabNum}
-          displayName={currentCategory.tabName}
-          onCategoryChange={handleCategoryChange}
-        />
-        <ListContainer>
-          <Board posts={posts} currentCategoryName={currentCategory.tabName} />
-        </ListContainer>
-        <Pagination
-          total={30}
-          limit={limit}
-          pageNum={pageNum}
-          setPage={handlePageChange}
-        />
-      </Content>
-    </>
-  );
+  if (isLoggedIn) {
+    return (
+      <>
+        <Content>
+          <PageTitle>커뮤니티 </PageTitle>
+          <CategoryTab
+            tabNum={currentCategory.tabNum}
+            displayName={currentCategory.tabName}
+            onCategoryChange={handleCategoryChange}
+          />
+          <ListContainer>
+            <Board
+              posts={posts}
+              currentCategoryName={currentCategory.tabName}
+            />
+          </ListContainer>
+          <Pagination
+            total={30}
+            limit={limit}
+            pageNum={pageNum}
+            setPage={handlePageChange}
+          />
+        </Content>
+      </>
+    );
+  } else {
+    return <Navigate to="/login"></Navigate>;
+  }
 }
 
 const ListContainer = styled.div`

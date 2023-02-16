@@ -177,7 +177,7 @@ export default function PostPage() {
       </>
     );
   } else {
-    return <Navigate to="/"></Navigate>;
+    return <Navigate to="/login"></Navigate>;
   }
 }
 
