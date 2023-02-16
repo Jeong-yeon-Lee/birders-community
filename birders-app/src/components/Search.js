@@ -20,24 +20,28 @@ const Search = (props) => {
   function cancelSearch() {
     setSearchInput("");
     setIsSearched(false);
+    onSearch("");
   }
   return (
-    <SearchContainer>
-      <SearchInput>
-        <input
-          type="text"
-          name="searchText"
-          onChange={handleChange}
-          value={searchInput}
-          placeholder="게시글 제목을 입력하세요"
-        />
-      </SearchInput>
-      {isSearched ? (
-        <SearchButton onClick={cancelSearch}>취소</SearchButton>
-      ) : (
-        <SearchButton onClick={startSearch}>검색</SearchButton>
-      )}
-    </SearchContainer>
+    <>
+      <SearchContainer>
+        <SearchInput>
+          <input
+            type="text"
+            name="searchText"
+            onChange={handleChange}
+            value={searchInput}
+            placeholder="게시글 제목을 입력하세요"
+          />
+        </SearchInput>
+        {isSearched ? (
+          <SearchButton onClick={cancelSearch}>취소</SearchButton>
+        ) : (
+          <SearchButton onClick={startSearch}>검색</SearchButton>
+        )}
+      </SearchContainer>
+      {isSearched && <Helper>검색결과만 보이고 있어요</Helper>}
+    </>
   );
 };
 
@@ -62,7 +66,7 @@ const SearchButton = styled.button`
   white-space: nowrap;
 `;
 const Helper = styled.p`
-  font-size: 12px;
+  font-size: 14px;
   color: #006e5f;
   margin: 0.05rem 0 0.75rem 0;
 `;

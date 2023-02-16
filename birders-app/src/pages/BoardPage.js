@@ -66,6 +66,48 @@ export default function BoardPage() {
     });
   };
 
+  const getSearchedPosts = async (searchTxt) => {
+    let res = [];
+    setCurrentCategory({
+      tabNum: 0,
+      tabName: "all",
+      displayName: "전체",
+    });
+    console.log(searchTxt, typeof searchTxt);
+    const postsQuery = query(
+      postsCollectionRef,
+      where("title", "==", searchTxt),
+      orderBy("createdAt", "desc")
+    );
+    const dbPosts = await getDocs(postsQuery);
+    console.log(dbPosts.size);
+    if (dbPosts.size > 0) {
+      dbPosts.forEach((doc) => {
+        const postObject = {
+          ...doc.data(),
+          id: doc.id,
+        };
+        res.push(postObject);
+        setPosts([...res]);
+      });
+    } else {
+      setPosts([]);
+    }
+
+    // if (dbPosts.length > 0) {
+    //   dbPosts.forEach((doc) => {
+    //     const postObject = {
+    //       ...doc.data(),
+    //       id: doc.id,
+    //     };
+    //     res.push(postObject);
+    //     setPosts([...res]);
+    //   });
+    // } else {
+    //   setPosts([]);
+    // }
+  };
+
   const getPostsCount = async () => {
     querySnapshot = await getDocs(postsOrderBy);
 
@@ -106,6 +148,11 @@ export default function BoardPage() {
   };
   const handlePostsSearch = (searchInput) => {
     setSearchText(searchInput);
+    if (searchInput.trim().length > 0) {
+      getSearchedPosts(searchInput);
+    } else {
+      getPosts();
+    }
   };
 
   return (
@@ -119,14 +166,23 @@ export default function BoardPage() {
         />
         <Search onSearch={handlePostsSearch} />
         <ListContainer>
-          <Board posts={posts} currentCategoryName={currentCategory.tabName} />
+          {posts?.length > 0 ? (
+            <Board
+              posts={posts}
+              currentCategoryName={currentCategory.tabName}
+            />
+          ) : (
+            <div>게시글이 없어요</div>
+          )}
         </ListContainer>
-        <Pagination
-          total={postsCount}
-          limit={pageLimit}
-          pageNum={pageNum}
-          setPage={handlePageChange}
-        />
+        {searchText.trim().length === 0 && (
+          <Pagination
+            total={postsCount}
+            limit={pageLimit}
+            pageNum={pageNum}
+            setPage={handlePageChange}
+          />
+        )}
       </Content>
     </>
   );
