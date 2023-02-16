@@ -82,9 +82,11 @@ const TabButton = styled.div`
   font-size: 1.125rem;
   height: 3rem;
   text-decoration: none;
+  border-bottom: 1px solid #cce2df;
   &:nth-child(${(props) => props.tabNum + 1}) {
     color: rgb(52, 58, 64);
     font-weight: bold;
+    border-bottom: 1px solid #006e5f;
   }
   color: rgb(134, 142, 150);
   cursor: pointer;
