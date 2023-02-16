@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import CarouselComponent from "../components/Banner";
@@ -10,24 +17,30 @@ import Pagination from "../components/Pagination";
 
 export default function MainPage() {
   const [posts, setPosts] = useState([]);
-  const postsCollectionRef = collection(db, "posts");
+
   //pagination
-  const [limit, setLimit] = useState(6);
+  const [pageLimit, setPageLimit] = useState(6);
   const [pageNum, setPageNum] = useState(1);
+
   useEffect(() => {
     let res = [];
     const getPosts = async () => {
-      const dbPosts = await getDocs(postsCollectionRef);
-      //const data = await getDocs(postsCollectionRef);
-      //console.log("dbpost", dbPosts);
+      const postsCollectionRef = collection(db, "posts");
+      const postsQuery = query(
+        postsCollectionRef,
+        orderBy("createdAt", "desc"),
+        limit(3)
+      );
+      const dbPosts = await getDocs(postsQuery);
       dbPosts.forEach((doc) => {
-        //console.log(doc);
+        //console.log("doc", doc);
         const postObject = {
           ...doc.data(),
           id: doc.id,
         };
         res.push(postObject);
-
+        // setPosts((prev) => [postObject, ...prev]);
+        //setPosts([...posts, postObject])//왜 안되지?
         setPosts([...res]);
       });
     };
@@ -46,7 +59,7 @@ export default function MainPage() {
         <Board currentCategoryName={"all"} posts={posts} />
         <Pagination
           total={30}
-          limit={limit}
+          limit={pageLimit}
           pageNum={pageNum}
           setPage={handlePageChange}
         />
