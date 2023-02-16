@@ -100,7 +100,7 @@ export default function EditorPage() {
     }
 
     await addDoc(collection(db, "posts"), {
-      post,
+      ...post,
     });
 
     //console.log(post);

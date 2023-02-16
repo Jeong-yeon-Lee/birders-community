@@ -10,7 +10,9 @@ const Card = (props) => {
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut } = context;
   // console.log(props);
-  const { id, post } = props.post;
+  const post = props.post;
+  const postId = post.id;
+  // console.log(post.createdAt);
   const postCreateAt = new Date(post.createdAt).toLocaleString();
   const convertCategory = (categoryName) => {
     switch (categoryName) {
@@ -30,7 +32,10 @@ const Card = (props) => {
   };
   return (
     <>
-      <StyledPostTitleLink to={isLoggedIn ? `/post/${id}` : "/login"} key={id}>
+      <StyledPostTitleLink
+        to={isLoggedIn ? `/post/${postId}` : "/login"}
+        key={postId}
+      >
         <CardContainer>
           <Box1
             src={post.thumbnailSrc ? post.thumbnailSrc : SampleImg}

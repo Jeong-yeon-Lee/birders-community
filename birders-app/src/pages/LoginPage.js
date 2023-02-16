@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import AuthContext from "../components/AuthProvider";
 import GoogleButton from "react-google-button";
 import styled from "styled-components";
+import { Navigate } from "react-router-dom";
 import { PageTitle, Content } from "../elements/Common";
 import Button from "../components/Button";
 import UserProfile from "../components/UserProfile";
@@ -24,54 +25,57 @@ const LoginPage = () => {
     // alert(`${email} and ${password}`);
     emailLogIn(email, password);
   };
+  if (isLoggedIn) {
+    return <Navigate to="/"></Navigate>;
+  } else {
+    return (
+      <Content>
+        <LoginContainer>
+          <Wrapper>
+            <PageTitle>LOGIN</PageTitle>
+            <p>{!isLoggedIn ? "로그인 후 서비스를 이용할 수 있어요." : ""}</p>
+            <form onSubmit={handleSubmit}>
+              <label>이메일: </label>
+              <LoginInput>
+                <input
+                  type="text"
+                  name="email"
+                  onChange={handleChange}
+                  value={userInputs.email}
+                  placeholder="Email"
+                />
+              </LoginInput>
 
-  return (
-    <Content>
-      <LoginContainer>
-        <Wrapper>
-          <PageTitle>LOGIN</PageTitle>
-          <p>{!isLoggedIn ? "로그인 후 서비스를 이용할 수 있어요." : ""}</p>
-          <form onSubmit={handleSubmit}>
-            <label>이메일: </label>
-            <LoginInput>
-              <input
-                type="text"
-                name="email"
-                onChange={handleChange}
-                value={userInputs.email}
-                placeholder="Email"
-              />
-            </LoginInput>
+              <br />
+              <label>패스워드: </label>
+              <LoginInput>
+                <input
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  value={userInputs.password}
+                  placeholder="Password"
+                />
+              </LoginInput>
 
-            <br />
-            <label>패스워드: </label>
-            <LoginInput>
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                value={userInputs.password}
-                placeholder="Password"
-              />
-            </LoginInput>
-
-            <LoginInput>
-              <input type="submit" value="로그인" />
-            </LoginInput>
-          </form>
-          <P> OR</P>
-          {isLoggedIn && <UserProfile userInfo={user} />}
-          {isLoggedIn ? (
-            <Button _onClick={logOut} margin="0.5rem auto">
-              로그아웃
-            </Button>
-          ) : (
-            <GoogleButton onClick={() => logIn("google")} name="google" />
-          )}
-        </Wrapper>
-      </LoginContainer>
-    </Content>
-  );
+              <LoginInput>
+                <input type="submit" value="로그인" />
+              </LoginInput>
+            </form>
+            <P> OR</P>
+            {isLoggedIn && <UserProfile userInfo={user} />}
+            {isLoggedIn ? (
+              <Button _onClick={logOut} margin="0.5rem auto">
+                로그아웃
+              </Button>
+            ) : (
+              <GoogleButton onClick={() => logIn("google")} name="google" />
+            )}
+          </Wrapper>
+        </LoginContainer>
+      </Content>
+    );
+  }
 };
 
 export default LoginPage;

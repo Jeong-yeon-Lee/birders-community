@@ -12,9 +12,9 @@ export default function Board(props) {
   const postsCollectionRef = collection(db, "posts");
   const currentCategory = props.currentCategoryName;
   const currentPosts = props.posts;
-
+  //console.log(currentPosts);
   const filteredPosts = currentPosts?.filter(
-    (p) => p.post.categoryName === currentCategory
+    (p) => p.categoryName === currentCategory
   );
 
   const filteredResult = filteredPosts?.map((post) => (

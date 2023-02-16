@@ -36,29 +36,19 @@ export default function PostPage() {
         const docRef = doc(db, "posts", id);
         const dbPost = await getDoc(docRef);
         const res = dbPost.data();
-        setPost(res.post);
+        //setPost(res.post);
+        setPost(res);
       } catch (error) {
         console.log(error);
       }
     };
     getPost(postId);
-  }, []);
+  }, [postComments]);
 
   const updatePost = async (currentComments) => {
     const docRef = doc(db, "posts", postId);
-    //comment만 추가하는게 잘 안되어서 post 통째로 update...
     const data = { post };
-    //await db.doc(`posts/${postId}`).update({ comments: [currentComments] });
-    await updateDoc(docRef, data)
-      .then((docRef) => {
-        console.log("Value of an Existing Document Field has been updated");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    // await docRef.update({
-    //   comments: FieldValue.arrayUnion(...currentComments),
-    // });
+    await updateDoc(docRef, { comments: [...currentComments] });
   };
 
   const edit = () => {
@@ -93,7 +83,7 @@ export default function PostPage() {
     );
   });
 
-  const handleCommentSubmit = (commentInput) => {
+  const handleCommentSubmit = async (commentInput) => {
     console.log(commentInput, "submit");
     let commentId = shortid.generate();
     const newComment = {
@@ -104,7 +94,7 @@ export default function PostPage() {
       createdAt: Date.now(),
       postId: postId,
     };
-    let postCopy = post;
+    //let postCopy = post;
     //여기 하는중,,,,,,,,
     // if (post.comments.length === 0 || !post.comments) {
     //   setPostComments([newComment]);
@@ -112,9 +102,10 @@ export default function PostPage() {
     //   setPostComments([...post.comments, newComment]);
     // }
     setPostComments([...post.comments, newComment]);
-    postCopy.comments = [...post.comments, newComment];
-    updatePost([...post.comments, newComment]); //이렇게 안하면 왜 처음엔 빈것이 가는것...
-    setPost(postCopy);
+
+    updatePost([...post.comments, newComment]).then(() => {}); //이렇게 안하면 왜 처음엔 빈것이 가는것...
+    // postCopy.comments = [...post.comments, newComment];
+    // setPost(postCopy);
   };
   //console.log("밖", postComments);
   //console.log("comments확인", post.comments);
@@ -177,7 +168,7 @@ export default function PostPage() {
       </>
     );
   } else {
-    return <Navigate to="/login"></Navigate>;
+    return <Navigate to="/"></Navigate>;
   }
 }
 

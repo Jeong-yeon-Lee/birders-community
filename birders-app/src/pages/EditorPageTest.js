@@ -3,7 +3,7 @@ import { db } from "../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
 
 export default function EditorPageTest() {
-  const [num, setNum] = useState(6);
+  const [num, setNum] = useState(1);
 
   const comment = (num) => {
     return {
@@ -31,7 +31,7 @@ export default function EditorPageTest() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await addDoc(collection(db, "posts"), {
-      post,
+      ...post,
     });
     setNum(num + 1);
     setPost({
