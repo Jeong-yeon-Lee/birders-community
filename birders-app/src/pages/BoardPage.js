@@ -43,19 +43,36 @@ export default function BoardPage() {
     tabName: "all",
     displayName: "전체",
   });
+
   //search
   const [searchText, setSearchText] = useState("");
+  let postsQuery;
 
   const getPosts = async () => {
     let res = [];
-
-    const postsQuery = query(
+    console.log("여기", lastDoc);
+    postsQuery = query(
       postsCollectionRef,
       orderBy("createdAt", "desc"),
       startAfter(lastDoc),
       limit(3)
     );
+    console.log(currentCategory.tabName);
+    if (currentCategory.tabName !== "all") {
+      // const countSnap = await getDocs(categoryCountQuery);
+      //console.log(countSnap.size);
+      // setPostsCount(countSnap.size);
+
+      postsQuery = query(
+        postsCollectionRef,
+        where("categoryName", "==", currentCategory.tabName),
+        orderBy("createdAt", "desc"),
+        startAfter(lastDoc),
+        limit(3)
+      );
+    }
     const dbPosts = await getDocs(postsQuery);
+
     dbPosts.forEach((doc) => {
       const postObject = {
         ...doc.data(),
@@ -74,13 +91,13 @@ export default function BoardPage() {
       displayName: "전체",
     });
     console.log(searchTxt, typeof searchTxt);
-    const postsQuery = query(
+    const postsSearchQuery = query(
       postsCollectionRef,
       where("title", "==", searchTxt),
       orderBy("createdAt", "desc")
     );
-    const dbPosts = await getDocs(postsQuery);
-    console.log(dbPosts.size);
+    const dbPosts = await getDocs(postsSearchQuery);
+    // console.log(dbPosts.size);
     if (dbPosts.size > 0) {
       dbPosts.forEach((doc) => {
         const postObject = {
@@ -123,16 +140,38 @@ export default function BoardPage() {
   useEffect(() => {
     //let res = [];
     getPosts();
-  }, [lastDoc]);
+  }, [lastDoc, currentCategory]);
 
-  const handleCategoryChange = (obj) => {
+  const handleCategoryChange = async (obj) => {
+    //setPageNum(1);
     setCurrentCategory({
       ...currentCategory,
       tabNum: obj.tabNum,
       tabName: obj.tabName,
       displayName: obj.displayName,
     });
-    //console.log(currentCategory, "board");
+    if (obj.tabName === "all") {
+      //category- 검토 필요
+      const categoryCountQuery = query(
+        postsCollectionRef,
+        where("categoryName", "==", obj.tabName),
+        orderBy("createdAt", "desc")
+      );
+
+      querySnapshot = await getDocs(categoryCountQuery);
+
+      let offset = -1;
+      setLastDoc(querySnapshot.docs[offset]);
+      setPostsCount(querySnapshot.size);
+
+      //console.log(currentCategory, "board");
+      //getPosts();
+      //lastdoc, posttotal
+    } else {
+      //getPostsCount();
+      //getPosts();
+    }
+    //setPageNum(1);
   };
 
   const handlePageChange = async (currentPageNum) => {
