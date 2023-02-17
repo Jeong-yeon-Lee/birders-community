@@ -46,31 +46,43 @@ export default function BoardPage() {
 
   //search
   const [searchText, setSearchText] = useState("");
-  let postsQuery;
+  //let postsQuery;
 
   const getPosts = async () => {
     let res = [];
-    console.log("여기", lastDoc);
-    postsQuery = query(
+    //console.log("여기", lastDoc);
+    let postsQuery = query(
       postsCollectionRef,
       orderBy("createdAt", "desc"),
       startAfter(lastDoc),
       limit(3)
     );
-    console.log(currentCategory.tabName);
     if (currentCategory.tabName !== "all") {
-      // const countSnap = await getDocs(categoryCountQuery);
-      //console.log(countSnap.size);
-      // setPostsCount(countSnap.size);
-
       postsQuery = query(
         postsCollectionRef,
         where("categoryName", "==", currentCategory.tabName),
-        orderBy("createdAt", "desc"),
-        startAfter(lastDoc),
-        limit(3)
+        orderBy("createdAt", "desc")
+        // startAfter(lastDoc),
+        // limit(3)
       );
     }
+    //console.log(currentCategory.tabName);
+    // if (currentCategory.tabName !== "all") {
+    //   // const countSnap = await getDocs(categoryCountQuery);
+    //   //console.log(countSnap.size);
+    //   // setPostsCount(countSnap.size);
+    //   console.log("all이 아님");
+    //   //postsCollectionRef = collection(db, "posts");
+    //   console.log("postsCollectionRef:", postsCollectionRef);
+    //   console.log("currentCategory.tabName:", currentCategory.tabName);
+    //   postsQuery = query(
+    //     postsCollectionRef,
+    //     where("categoryName", "==", currentCategory.tabName),
+    //     orderBy("createdAt", "desc")
+    //     // startAfter(lastDoc),
+    //     // limit(3)
+    //   );
+    // }
     const dbPosts = await getDocs(postsQuery);
 
     dbPosts.forEach((doc) => {
@@ -81,6 +93,13 @@ export default function BoardPage() {
       res.push(postObject);
       setPosts([...res]);
     });
+
+    if (currentCategory.tabName !== "all") {
+      handlePageChange(1);
+      //setPageNum(1);
+      //querySnapshot = await getDocs(postsOrderBy);
+      //setLastDoc(dbPosts.docs[-1]);
+    }
   };
 
   const getSearchedPosts = async (searchTxt) => {
@@ -139,39 +158,21 @@ export default function BoardPage() {
 
   useEffect(() => {
     //let res = [];
+    //let q = currentCategory.tabName === "all" ? "default" : "category";
+    //getPostsCount(q);
     getPosts();
-  }, [lastDoc, currentCategory]);
+  }, [lastDoc, pageNum]);
 
   const handleCategoryChange = async (obj) => {
-    //setPageNum(1);
     setCurrentCategory({
       ...currentCategory,
       tabNum: obj.tabNum,
       tabName: obj.tabName,
       displayName: obj.displayName,
     });
-    if (obj.tabName === "all") {
-      //category- 검토 필요
-      const categoryCountQuery = query(
-        postsCollectionRef,
-        where("categoryName", "==", obj.tabName),
-        orderBy("createdAt", "desc")
-      );
-
-      querySnapshot = await getDocs(categoryCountQuery);
-
-      let offset = -1;
-      setLastDoc(querySnapshot.docs[offset]);
-      setPostsCount(querySnapshot.size);
-
-      //console.log(currentCategory, "board");
-      //getPosts();
-      //lastdoc, posttotal
-    } else {
-      //getPostsCount();
-      //getPosts();
+    if (obj.tabName !== "all") {
+      setPageNum(0);
     }
-    //setPageNum(1);
   };
 
   const handlePageChange = async (currentPageNum) => {
