@@ -2,8 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../components/AuthProvider";
 import { db } from "../firebaseConfig";
 import styled from "styled-components";
-import { doc, FieldValue, getDoc, updateDoc } from "firebase/firestore";
-import { useParams, Navigate, Link } from "react-router-dom";
+import {
+  doc,
+  FieldValue,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { useParams, Navigate, Link, useNavigate } from "react-router-dom";
 import { Content, Tag, Title } from "../elements/Common";
 import Button from "../components/Button";
 import moment from "moment";
@@ -16,7 +22,7 @@ export default function PostPage() {
   const context = useContext(AuthContext);
   const { user, isLoggedIn, logIn, logOut } = context;
   //console.log("user", user.email);
-
+  const navigate = useNavigate();
   let params = useParams();
   // const navigate = useNavigate();
   const postId = params.id;
@@ -44,12 +50,33 @@ export default function PostPage() {
       }
     };
     getPost(postId);
-  }, [postComments]);
+  }, [postComments, isLike]);
 
-  const updatePost = async (currentComments) => {
+  const deletePost = async () => {
+    const ok = window.confirm("게시글을 삭제하시겠습니까?");
+    console.log(ok);
+    if (ok) {
+      const docRef = doc(db, "posts", postId);
+      await deleteDoc(docRef)
+        .then(() => {
+          alert("삭제된 게시물입니다.");
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log("문제가 발생했어요. 다시 시도해주세요");
+        });
+    }
+  };
+  const updateCommentPost = async (currentComments) => {
     const docRef = doc(db, "posts", postId);
     const data = { post };
     await updateDoc(docRef, { comments: [...currentComments] });
+  };
+  const updateLikePost = async (isLike) => {
+    const docRef = doc(db, "posts", postId);
+    const data = { post };
+    const likes = isLike ? post.likes + 1 : post.likes - 1;
+    await updateDoc(docRef, { likes: likes });
   };
 
   const edit = () => {
@@ -58,6 +85,7 @@ export default function PostPage() {
 
   const toggleLike = () => {
     console.log("like");
+    updateLikePost(!isLike);
     setIsLike(!isLike);
   };
 
@@ -104,7 +132,7 @@ export default function PostPage() {
     // }
     setPostComments([...post.comments, newComment]);
 
-    updatePost([...post.comments, newComment]).then(() => {}); //이렇게 안하면 왜 처음엔 빈것이 가는것...
+    updateCommentPost([...post.comments, newComment]).then(() => {}); //이렇게 안하면 왜 처음엔 빈것이 가는것...
     // postCopy.comments = [...post.comments, newComment];
     // setPost(postCopy);
   };
@@ -145,16 +173,16 @@ export default function PostPage() {
                   <WrapperRow>
                     {post.userId === user.email && (
                       <div>
-                        <Button
+                        {/* <Button
                           _onClick={edit}
                           margin="0 0.25rem"
                           fontSize={"12px"}
                           padding={"0.25rem 0.5rem"}
                         >
                           수정
-                        </Button>
+                        </Button> */}
                         <Button
-                          _onClick={edit}
+                          _onClick={deletePost}
                           margin="0 1rem 0 0.25rem"
                           fontSize={"12px"}
                           padding={"0.25rem 0.5rem"}
